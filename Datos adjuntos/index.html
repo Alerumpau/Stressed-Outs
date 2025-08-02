@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book shop Center</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 2em 2em 0 2em;
+      background-color: #fdf7f0;
+      color: #1eae96;
+    }
+    header {
+      background-color: #1eae96;
+      color: #f5f5f5;
+      text-align: center;
+      padding: 2.5em 1em;
+      box-shadow: 0 4px 8px #0ca5a31a(14, 102, 67, 0.2);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin-top: 0.5em;
+      font-size: 1.1em;
+    }
+    nav {
+      text-align: center;
+      margin-top: 1em;
+    }
+    nav button {
+      margin: 0.5em;
+      padding: 0.5em 1em;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      background-color: #1eae96;
+      color: #ffffff;
+      cursor: pointer;
+    }
+    main {
+      padding: 2em;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .catalogo h2 {
+      text-align: center;
+      margin-bottom: 1.5em;
+      color: #f0f7f5;
+      font-size: 1.8em;
+    }
+    .libros {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 2em;
+    }
+    .libro {
+      background-color: #000000;
+      border: 2px solid #017b5a;
+      border-radius: 12px;
+      padding: 1.5em;
+      box-shadow: 0 2px 6px #0ca5a31a;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .libro:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 14px #0ca5a31a(0,0,0,0.15);
+    }
+    .libro h3 {
+      margin-top: 0;
+      color: #008b6f;
+      font-size: 1.4em;
+    }
+    .libro p {
+      margin: 0.5em 0;
+      font-size: 0.95em;
+    }
+    .carrito {
+      background-color: #ffffff;
+      padding: 1em;
+      border-radius: 12px;
+      margin-top: 2em;
+    }
+    .carrito h3 {
+      margin-top: 0;
+    }
+    footer {
+      text-align: center;
+      background-color: #0d887d;
+      padding: 1.2em 1em;
+      margin-top: 1.5em;
+      color: #064a78;
+      border-top: 1px solid #0d887d;
+      font-size: 0.95em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Book shop Center</h1>
+    <p>You can buy your favorite book</p>
+    <nav>
+      <button onclick="login()">Login</button>
+      <button onclick="verCarrito()">Ver Carrito</button>
+    </nav>
+  </header>
+  <main>
+    <section class="catalogo">
+      <h2>OUR AVAILABLE BOOKS</h2>
+      <div class="libros" id="catalogoLibros"></div>
+    </section>
+    <section class="carrito" id="carrito" style="display:none;">
+      <h3>Tu carrito</h3>
+      <ul id="listaCarrito"></ul>
+      <p><strong>Total:</strong> $<span id="totalCarrito">0.00</span></p>
+      <button onclick="checkout()">Finalizar compra</button>
+    </section>
+  </main>
+  <footer>
+    <p>© 2025 Book Shop Center. Todos los derechos son reservados.</p>
+  </footer>
+  <script>
+    const libros = [
+      { titulo: "Stressed Out, Don't Cry", autor: "Ximena Cifuentes", precio: 15.99, link: "sinopsis1.html" },
+      { titulo: "Stressed Out, What Nobody Tells You", autor: "Alejandro Morales", precio: 12.50, link: "sinopsis2.html" },
+      { titulo: "Stressed Out, Focus", autor: "Santiago Escobar, Andrea Rodriguez", precio: 18.00, link: "sinopsis3.html" }
+    ];
+    const carrito = [];
+    const catalogo = document.getElementById('catalogoLibros');
+    libros.forEach((libro, index) => {
+      const div = document.createElement('div');
+      div.className = 'libro';
+      div.innerHTML = `
+        <h3><a href="${libro.link}" target="_blank">${libro.titulo}</a></h3>
+        <p><strong>Autor:</strong> ${libro.autor}</p>
+        <p><strong>Precio:</strong> $${libro.precio.toFixed(2)}</p>
+        <button onclick="agregarCarrito(${index})">Agregar al carrito</button>
+      `;
+      catalogo.appendChild(div);
+    });
+    function agregarCarrito(index) {
+      carrito.push(libros[index]);
+      alert(`Agregado: ${libros[index].titulo}`);
+    }
+    function verCarrito() {
+      const lista = document.getElementById('listaCarrito');
+      const total = document.getElementById('totalCarrito');
+      lista.innerHTML = '';
+      let suma = 0;
+      carrito.forEach(libro => {
+        const li = document.createElement('li');
+        li.textContent = `${libro.titulo} - $${libro.precio.toFixed(2)}`;
+        lista.appendChild(li);
+        suma += libro.precio;
+      });
+      total.textContent = suma.toFixed(2);
+      document.getElementById('carrito').style.display = 'block';
+    }
+    function checkout() {
+      if (carrito.length === 0) {
+        alert("Tu carrito está vacío");
+        return;
+      }
+      alert("¡Gracias por tu compra! Redirigiendo a pasarela de pago...");
+    }
+    function login() {
+      const usuario = prompt("Usuario:");
+      const contrasena = prompt("Contraseña:");
+      if (usuario === "admin" && contrasena === "1234") {
+        alert("Login exitoso");
+      } else {
+        alert("Credenciales incorrectas");
+      }
+    }
+  </script>
+</body>
+</html>
